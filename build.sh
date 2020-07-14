@@ -9,14 +9,14 @@
 
 set -e
 
-image="alpine/git"
+image="arm64-alpine/git"
 
 LATEST_TAG=$(git ls-remote --tags origin |awk -F \/ '{print $NF}'|grep ^1.0. |sort -Vr|head -1)
 if [[ -z "${LATEST_TAG}" ]]
 then
     NEXT_TAG="1.0.0"
 else
-    NEXT_TAG=$(docker run --rm alpine/semver:5.5.0 semver -c -i patch ${LATEST_TAG})
+    NEXT_TAG=$(docker run --rm arm64v8/alpine/semver:5.5.0 semver -c -i patch ${LATEST_TAG})
 fi
 echo ${NEXT_TAG}
 
@@ -35,7 +35,7 @@ if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == false ]]; then
   docker push ${image}:v${VERSION}
 
   # push the tag
-  git remote set-url origin https://${GITHUB_NAME}:${GITHUB_TOKEN}@github.com/alpine-docker/git.git
+  git remote set-url origin https://${GITHUB_NAME}:${GITHUB_TOKEN}@github.com/arm64-alpine-docker/git.git
   echo "Set github Username & Email"
   git config user.name "ci"
   git config user.email "ci"
